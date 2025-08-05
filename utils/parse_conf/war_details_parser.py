@@ -1,59 +1,54 @@
 import json
-import requests
+import datetime
 from . import api_endpoints
 
 # https://api.helldivers2.dev/api/v1/war
+def parse_iso_timestamp(iso_string):
+
+    if iso_string is None:
+        return None
+    try:
+        dt_object_utc = datetime.datetime.fromisoformat(iso_string.replace('Z', "+00:00"))
+        return dt_object_utc.strftime("%Y-%M-%D %H:%M:%S UTC")
+    except (ValueError, TypeError):
+        return "\nInvalid Timestamp format"
+    except Exception as e:
+        return f"An unexpected error occurred: {e}"
+
+
+
 def parse_war_details(data):
 
-    parsed_stats = []
+    parsed_stats = {}
 
     if not isinstance (data, dict):
-        print(f"Error: Expected a list of war-specific details, but received {type(data)}")
+        print(f"Error: Expected a dictionary for war-specific details, but received {type(data)}")
         return None
     
     try:
-        for stats in data:
-            war_start_date = stats.get("started", {})
-            war_current_date = stats.get("now", {})
+        """
+            Key detail here is that we use the empty list above (parsed_stats) 
+            is to identify and list the required statistics in an easily readable format
+            rather than defining each value accordingly.
+        """
 
-            stats_dict = stats.get("statistics")
-            if isinstance(stats_dict, dict):
-                missions_won = stats_dict.get("missionsWon")
-                missions_lost = stats_dict.get("missionsLost")
-                mission_time = stats_dict.get("missionTime")
-                terminid_kills = stats_dict.get("terminidKills")
-                automoton_kills = stats_dict.get("automotonKills")
-                illuminate_kills = stats_dict.get("illuminateKills")
-                bullets_fired = stats_dict.get("bulletsFired")
-                bullets_hit = stats_dict.get("bulletsHit")
-                time_played = stats_dict.get("timePlayed")
-                deaths = stats_dict.get("deaths")
-                revives = stats_dict.get("revives")
-                friendly_kills = stats_dict.get("friendlies")
-                mission_success_rate = stats_dict.get("missionSuccessRate")
-                accuracy = stats_dict.get("accuracy")
-                current_player_count = stats_dict.get("playerCount")
+        # WarID
+        parsed_stats["warId"] = data.get("warId")
 
-            if war_start_date and war_current_date:
-                war_stats = {
-                    "missionsWon": missions_won,
-                    "missionsLost": missions_lost,
-                    "missionTime": mission_time,
-                    "terminidKills": terminid_kills,
-                    "automotonKills": automoton_kills,
-                    "illuminateKills": illuminate_kills,
-                    "bulletsFired": bullets_fired,
-                    "bulletsHit": bullets_hit,
-                    "timePlayed": time_played,
-                    "deaths": deaths,
-                    "revives": revives,
-                    "friendlies": friendly_kills,
-                    "missionSuccessRate": mission_success_rate,
-                    "accuracy": accuracy,
-                    "playerCount": current_player_count
-                }
-            
+        # Timestamp stats
+        parsed_stats["start_time"] = parse_iso_timestamp(data.get("started"))
+        parsed_stats["end_time"] = parse_iso_timestamp(data.get("ended"))
+        parsed_stats["current_time"] = parse_iso_timestamp(data.get("now"))
+
+        # Store all stats dictionary
+        statistics_data = data.get("statistics", {})
+        parsed_stats["overall_war_stats"] = statistics_data
+        
+        parsed_stats["client_version"] = data.get("clientVersion")
+        
+        print("\nSuccesfully parsed Galactic War details.")
+        return parsed_stats
 
     except (AttributeError, TypeError) as e:
-        print(f"Error processing stats: {e}")
+        print(f"Error processing war details: {e}")
         return None
