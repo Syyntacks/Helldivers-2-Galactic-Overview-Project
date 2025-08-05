@@ -13,6 +13,7 @@ def parse_major_order_data(data):
     try:
         
         for order in data:
+            # Parsing and defining raw data
             mission_title = order.get("setting", {}).get("overrideTitle", order.get("title"))
             description = order.get("setting", {}).get("overrideBrief", order.get("briefing"))
 
@@ -49,5 +50,5 @@ def parse_major_order_data(data):
         return parsed_orders
             
     except (AttributeError, TypeError) as e:
-        print ("Error processing major order's data: {e}")
+        print (f"Error processing major order's data: {e}")
         return None
