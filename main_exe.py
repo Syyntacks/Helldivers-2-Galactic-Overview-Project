@@ -12,7 +12,7 @@ def main_program():
     """
 
     print("\n---- Beginning new data refresh cycle ----")
-    major_order_endpoint = api_endpoints.api_endpoints.get("major_orders")
+    major_order_endpoint = api_endpoints.api_endpoints.get("mo_overview")
     if major_order_endpoint:
         major_orders_data = data_fetcher.fetch_data_from_endpoint(major_order_endpoint)
         if major_orders_data:
@@ -26,7 +26,7 @@ def main_program():
                     print(f"Mission type: {order.get('missionType')}")
                     print(f"Briefing: {order.get("briefing")}")
                     print(f"Description: {order.get('description')}")
-                    print(f"Tasks: {order.get("tasks")}")
+                    # print(f"Tasks: {order.get("tasks")}")
                     print(f"Progress: {order.get("progress")}")
                     print(f"Rewards: {order.get("rewards")} Medals")
                     print(f"Expires: {order.get("expirationTime")}")
