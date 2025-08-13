@@ -1,10 +1,20 @@
 import json
 from . import api_endpoints
+def parse_iso_timestamp(iso_string):
 
+    if iso_string is None:
+        return None
+    try:
+        dt_object_utc = datetime.datetime.fromisoformat(iso_string.replace('Z', "+00:00"))
+        return dt_object_utc.strftime("%Y-%M-%D %H:%M:%S UTC")
+    except (ValueError, TypeError):
+        return "\nInvalid Timestamp format"
+    except Exception as e:
+        return f"An unexpected error occurred: {e}"
 
 def parse_major_order_data(data):
     
-    parsed_orders = []
+    parsed_orders = {}
     
     if not isinstance(data, list):
         print(f"Error: Expected a list of major orders, but received {type(data)}")
