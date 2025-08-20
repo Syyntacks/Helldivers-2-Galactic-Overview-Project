@@ -1,6 +1,5 @@
 import requests
 from . import api_endpoints
-from . import major_order_parser
 
 
 # API Data Endpoint Dictionaries

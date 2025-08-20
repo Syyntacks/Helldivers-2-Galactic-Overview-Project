@@ -1,36 +1,11 @@
+import datetime
 import json
 from . import api_endpoints
-import datetime
-
-def expiration_time_format(seconds_remaining):
-
-    if seconds_remaining is None or not isinstance(seconds_remaining, int):
-        return "N/A"
-    
-    try:
-        # Get current UTC time
-        now_utc = datetime.datetime.now(datetime.timezone.utc)
-
-        # Add the remaining seconds to the current time to calculate expiration date
-        expiration_datetime = now_utc + datetime.timedelta(seconds=seconds_remaining)
-        return expiration_datetime.strftime("%Y-%M-%D %H:%M:%S UTC")
-    except (ValueError, TypeError) as e:
-        return f"Invalid time value: {e}"
+from . import datetime_converter
 
 
-def parse_iso_timestamp(iso_string):
 
-    if iso_string is None:
-        return None
-    try:
-        dt_object_utc = datetime.datetime.fromisoformat(iso_string.replace('Z', "+00:00"))
-        return dt_object_utc.strftime("%Y-%M-%D %H:%M:%S UTC")
-    except (ValueError, TypeError):
-        return "\nInvalid Timestamp format"
-    except Exception as e:
-        return f"An unexpected error occurred: {e}"
-
-def parse_major_order_data(data):
+def parse_major_order_data(data, user_timezone="UTC"):
     
     parsed_orders = []
     
@@ -50,10 +25,12 @@ def parse_major_order_data(data):
             tasks = setting.get("tasks")
 
             expires_in_seconds = order.get("expiresIn")
-            expiration_time = expiration_time_format(expires_in_seconds)
+
+            expiration_time = datetime_converter.expiration_time_format(expires_in_seconds, user_timezone) # Now takes into account user timezone.
 
             # Reward Parsing (to handle None exceptions)
             rewards = None
+            
             reward_dict = setting.get("reward")
             if isinstance(reward_dict, dict):
                 rewards = reward_dict.get("amount")
