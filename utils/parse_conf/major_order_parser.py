@@ -7,6 +7,7 @@ from . import datetime_converter
 
 def parse_major_order_data(data, user_timezone="UTC"):
     
+    # List to hold multiple dictionaries
     parsed_orders = []
     
     if not isinstance(data, list):
@@ -16,43 +17,49 @@ def parse_major_order_data(data, user_timezone="UTC"):
     try:
         
         for order in data:
-            setting = order.get("setting", {})
-            # Parsing and defining raw data
-            assignment_progress = order.get("progress")
-            mission_title = setting.get("overrideTitle")
-            briefing = setting.get("overrideBrief")
-            description = setting.get("taskDescription")
-            tasks = setting.get("tasks")
+            order_details = {}
 
-            expires_in_seconds = order.get("expiresIn")
-
-            expiration_time = datetime_converter.expiration_time_format(expires_in_seconds, user_timezone) # Now takes into account user timezone.
-
-            # Reward Parsing (to handle None exceptions)
-            rewards = None
+            order_details["order_id"] = order.get("id")
+            order_details["order_expiration"] = datetime_converter.parse_iso_timestamp(order.get("expiration"), user_timezone)
             
-            reward_dict = setting.get("reward")
-            if isinstance(reward_dict, dict):
-                rewards = reward_dict.get("amount")
+            # Mission settings
+            order_details["order_type"] = order.get("type")
+            order_details["order_title"] = order.get("title")
+            order_details["order_briefing"] = order.get("briefing")
+            order_details["order_taskDescr"] = order.get("description")
 
-            if rewards is None:
-                rewards_list = setting.get("rewards")
-                if isinstance(rewards_list, list) and rewards_list and isinstance(rewards_list[0], dict):
-                    rewards = rewards_list[0].get("amount")
+            # Task-specifics
+            tasks_list = order.get("tasks", [])
+            progress_list = order.get("progress", [])
+            parsed_tasks = [] # Holds parsed tasks
 
-            if mission_title:
-                order_details = {
-                    "missionType": mission_title,
-                    "progress": assignment_progress,
-                    "briefing": briefing,
-                    "description": description,
-                    "tasks": tasks,
-                    "rewards": rewards,
-                    "expirationTime": expiration_time
-                }
-                parsed_orders.append(order_details)
+            for i, task in enumerate(tasks_list): # Enumerate turns a number into an index for a list
+                task_details = {}
+                values = task.get("values", [])
+                valueTypes = task.get("valueTypes", [])
+                value_map = dict(zip(valueTypes, values)) # Pair two value lists together
+
+                task_details["type"] = task.get("type")
+                task_details["goal"] = value_map.get(3) # 3 = goal
+                task_details["target_planet_id"] = value_map.get(12) # 12 = Planet ID for MO
+
+                if i < len(progress_list):
+                    task_details["progress"] = progress_list[i]
+                else:
+                    task_details["progress"] = 0 # If no progress data available
+
+                parsed_tasks.append(task_details)
+
+            order_details["tasks"] = parsed_tasks
+
+            # Reward Parsing
+            reward_data = order.get("rewards")
+            if reward_data and isinstance(reward_data, dict):
+                order_details["rewards"] = reward_data.get("amount")
             else:
-                print("Warning: Skipping an order due to missing title or description.")
+                order_details["rewards"] = None
+
+            parsed_orders.append(order_details)
 
         print(f"Successfully parsed {len(parsed_orders)} major orders.")
         return parsed_orders

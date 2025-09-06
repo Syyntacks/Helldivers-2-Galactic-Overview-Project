@@ -57,3 +57,27 @@ def parse_iso_timestamp(iso_string, timezone_str="UTC"):
         return "\nInvalid Timestamp format"
     except Exception as e:
         return f"An unexpected error occurred: {e}"
+    
+
+# Assists with Major Order datetime.
+def parse_numeric_timestamp(numeric_timestamp, timezone_str="UTC"):
+    if not isinstance(numeric_timestamp, (int, float)):
+        return "N/A"
+    
+    try:
+        dt_object_utc = datetime.datetime.fromtimestamp(numeric_timestamp, datetime.timezone.utc)
+
+        # Local time conversion
+        if timezone_str == "UTC":
+            local_dt = dt_object_utc
+        else:
+            try:
+                local_timezone = pytz.timezone(timezone_str)
+                local_dt = dt_object_utc.astimezone(local_timezone)
+            except pytz.UnknownTimeZoneError:
+                print(f"Warning: Received unknown timezone '{timezone_str}'. Displaying in UTC instead.")
+                local_dt = dt_object_utc
+
+        return local_dt.strftime("%Y-%m-%d %H:%M:$S %Z%z")
+    except (ValueError, TypeError) as e:
+        return f"Invalid numeric timestamp value: {e}"

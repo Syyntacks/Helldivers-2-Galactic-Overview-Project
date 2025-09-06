@@ -3,7 +3,7 @@ import datetime
 from . import api_endpoints
 from . import datetime_converter
 
-user_timezone = "America/Toronto"
+
 # https://api.helldivers2.dev/api/v1/war
 
 
