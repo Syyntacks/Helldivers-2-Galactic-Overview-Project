@@ -1,13 +1,14 @@
 import time
-import pytz
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 # File Importing
 from utils.parse_conf import data_fetcher
 from utils.parse_conf import datetime_converter
-from utils.parse_conf import api_endpoints
+from conf import settings
 from utils.parse_conf import major_order_parser
-from utils.parse_conf import war_details_parser
+from utils.parse_conf import galaxy_stats_parser
 
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 user_timezone = "America/Toronto"
@@ -29,9 +30,9 @@ def main_program():
     print("\n---- Beginning new data refresh cycle ----")
     
 
-    major_order_endpoint = api_endpoints.api_endpoints.get("major_orders")
-    if major_order_endpoint:
-        major_orders_data = data_fetcher.fetch_data_from_endpoint(major_order_endpoint)
+    major_order_url = settings.urls.get("major_order")
+    if major_order_url:
+        major_orders_data = data_fetcher.fetch_data_from_url(major_order_url)
         if major_orders_data:
             # save_json_to_file(major_orders_data, "raw_mo_data") #<------- SAVES
 
@@ -41,11 +42,11 @@ def main_program():
 
                 print("\nSuccesfully parsed the following Major Order(s):")
                 for order in parsed_orders:
-                    print("_____________________")
-                    print(f"{order.get("order_title")}") # "MAJOR ORDER or SECONDARY ORDER"
-                    print(f"Briefing: {order.get("order_briefing")}")
+                    print(f"        {order.get("order_title")}") # "MAJOR ORDER or SECONDARY ORDER"
+                    print("    -------------------")
                     
-                    # --- NEW DISPLAY LOOP FOR TASKS ---
+                    print(f"    Briefing: {order.get("order_briefing")}")
+                    
                     tasks = order.get("tasks", [])
                     if tasks:
                         print("\n    --- OBJECTIVES ---")
@@ -65,9 +66,8 @@ def main_program():
                                 percentage = (progress / goal) * 100
                                 print(f"        Completion: {percentage:.3f}%")
                         print("    ------------------")
-                    # ------------------------------------
-                    print(f"    Order Expires: {order.get("order_expiration")}")
 
+                    print(f"    Order Expires: {order.get("order_expires")}")
 
                     if order.get("rewards"):
                         print(f"\n  Rewards: {order.get("rewards")} Medals")
@@ -79,29 +79,30 @@ def main_program():
         else:
             print("\nFailed to fetch Major Order data.")
 
-    war_stats_endpoint = api_endpoints.api_endpoints.get("war_state")
-    if war_stats_endpoint:   
-        war_stats_data = data_fetcher.fetch_data_from_endpoint(war_stats_endpoint)
-        if war_stats_data:
-            print("\nSuccessfully fetched raw Galactic War stats. Now parsing...")
+
+
+
+
+
+    galaxy_stats_lib = settings.urls.get("planet_stats")
+    galaxy_stats = galaxy_stats_lib
+
+
+    if galaxy_stats:   
+        galaxy_stats_data = data_fetcher.fetch_data_from_url(galaxy_stats)
+        if galaxy_stats_data:
+            print("\nSuccessfully fetched Galactic War statistics. Now parsing...")
             # Parse through for necessary key-pairs
-            parsed_war_stats = war_details_parser.parse_war_details(war_stats_data)
+            parsed_galaxy_stats = galaxy_stats_parser.parse_galaxy_stats(galaxy_stats_data)
             
-            if parsed_war_stats:
+            if parsed_galaxy_stats:
                 print("\nSuccessfully parsed Galactic War stats:")
 
                 # CONVERTS UTC INTO USER TIMEZONE (CANADA/EASTERN)
-                start_time_utc = parsed_war_stats.get('start_time', "N/A")
-                # end_time_utc = parsed_war_stats.get('end_time', "N/A")
-                current_time_utc = parsed_war_stats.get('current_time', "N/A")
-                print(f"    War started: {datetime_converter.parse_iso_timestamp(start_time_utc, user_timezone)}")
-                # print(f"    War ends: {datetime_converter.parse_iso_timestamp(end_time_utc, user_timezone)}")
-                print(f"    Current time: {datetime_converter.parse_iso_timestamp(current_time_utc, user_timezone)}")
-                print(f"    Client version: {parsed_war_stats.get('client_version', "N/A")}")
+                print("\n---- GALACTIC WAR STATS ----")
+                
 
-                print("\n---- OVERALL WAR STATS ----")
-
-                overall_stats = parsed_war_stats.get("overall_war_stats", {})
+                overall_stats = parsed_galaxy_stats.get("galaxy_stats", {})
                 if overall_stats:
                     for key, value in overall_stats.items():
                         print(f"    {key.replace("_", " ").title()}: {value:,}")

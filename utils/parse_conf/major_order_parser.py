@@ -1,6 +1,3 @@
-import datetime
-import json
-from . import api_endpoints
 from . import datetime_converter
 
 
@@ -19,18 +16,21 @@ def parse_major_order_data(data, user_timezone="UTC"):
         for order in data:
             order_details = {}
 
-            order_details["order_id"] = order.get("id")
-            order_details["order_expiration"] = datetime_converter.parse_iso_timestamp(order.get("expiration"), user_timezone)
-            
+            order_details["order_id"] = order.get("id32")
+            order_details["order_expires"] = datetime_converter.seconds_time_format(order.get("expiresIn"), user_timezone)
+
             # Mission settings
-            order_details["order_type"] = order.get("type")
-            order_details["order_title"] = order.get("title")
-            order_details["order_briefing"] = order.get("briefing")
-            order_details["order_taskDescr"] = order.get("description")
+            mission_settings = order.get("setting")
+            order_details["order_type"] = mission_settings.get("type")
+            order_details["order_title"] = mission_settings.get("overrideTitle")
+            order_details["order_briefing"] = mission_settings.get("overrideBrief")
+            order_details["order_taskDescr"] = mission_settings.get("taskDescription")
 
             # Task-specifics
-            tasks_list = order.get("tasks", [])
-            progress_list = order.get("progress", [])
+            tasks_list = mission_settings.get("tasks", [])
+                # Progress
+            order_progress = order.get("progress")
+            order_details["order_progress"] = order_progress
             parsed_tasks = [] # Holds parsed tasks
 
             for i, task in enumerate(tasks_list): # Enumerate turns a number into an index for a list
@@ -38,13 +38,16 @@ def parse_major_order_data(data, user_timezone="UTC"):
                 values = task.get("values", [])
                 valueTypes = task.get("valueTypes", [])
                 value_map = dict(zip(valueTypes, values)) # Pair two value lists together
-
-                task_details["type"] = task.get("type")
+                
+                if task.get("type") == 2:
+                    task_details["type"] = "Collect"
+                elif task.get("type") == 13:
+                    task_details["type"] = "Defend"
                 task_details["goal"] = value_map.get(3) # 3 = goal
                 task_details["target_planet_id"] = value_map.get(12) # 12 = Planet ID for MO
 
-                if i < len(progress_list):
-                    task_details["progress"] = progress_list[i]
+                if i < len(tasks_list):
+                    task_details["progress"] = order_progress[i]
                 else:
                     task_details["progress"] = 0 # If no progress data available
 

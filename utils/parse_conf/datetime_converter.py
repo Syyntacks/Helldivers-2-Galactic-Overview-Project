@@ -1,9 +1,9 @@
 import datetime
 import pytz
 
-def expiration_time_format(seconds_remaining, timezone_str="UTC"):
+def seconds_time_format(seconds_value, timezone_str="UTC"):
 
-    if seconds_remaining is None or not isinstance(seconds_remaining, int):
+    if seconds_value is None or not isinstance(seconds_value, int):
         return "N/A"
     
     try:
@@ -11,7 +11,7 @@ def expiration_time_format(seconds_remaining, timezone_str="UTC"):
         now_utc = datetime.datetime.now(datetime.timezone.utc)
 
         # Add the remaining seconds to the current time to calculate expiration date
-        expiration_datetime_utc = now_utc + datetime.timedelta(seconds=seconds_remaining)
+        expiration_datetime_utc = now_utc + datetime.timedelta(seconds=seconds_value)
 
 
         # 08-19-25: adding in timezone converter using pytz package.
