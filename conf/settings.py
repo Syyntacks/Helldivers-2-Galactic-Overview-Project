@@ -45,6 +45,7 @@ urls = {
     "updates": os.environ["STEAM_NEWS"],
     "items": base_url + os.environ["ITEMS"],
     "mission_rewards": base_url + os.environ["MISSION_REWARDS"],
+    "planets": base_url + os.environ["PLANETS"],
     "store_rotation": base_url + os.environ["STORE_ROTATION"],
     "warbonds": base_url + os.environ["WARBONDS"],
     "warbond_hm": base_url + os.environ["WARBOND_HM"],
