@@ -18,7 +18,6 @@ def parse_major_order_data(data, user_timezone="UTC"):
 
             order_details["order_id"] = order.get("id32")
 
-            expiration_iso_string = order.get("")
             order_details["order_expires"] = datetime_converter.get_expiration_from_seconds(order.get("expiresIn"), user_timezone)
 
             # Mission settings
