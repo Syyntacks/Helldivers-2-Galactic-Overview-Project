@@ -219,19 +219,19 @@ def format_duration_from_seconds(total_seconds):
     # Final time strings
     time_sections = []
     if years > 0:
-        time_sections.append(f"{years} year{'s' if years != 1 else ''}")
+        time_sections.append(f"{years:,} year{'s' if years != 1 else ''}")
     if months > 0:
-        time_sections.append(f"{months} month{'s' if months != 1 else ''}")
+        time_sections.append(f"{months:,} month{'s' if months != 1 else ''}")
     if weeks > 0:
-        time_sections.append(f"{weeks} week{'s' if weeks != 1 else ''}")
+        time_sections.append(f"{weeks:,} week{'s' if weeks != 1 else ''}")
     if days > 0:
-        time_sections.append(f"{days} day{'s' if days != 1 else ''}")
+        time_sections.append(f"{days:,} day{'s' if days != 1 else ''}")
     if hours > 0:
-        time_sections.append(f"{hours} hour{'s' if hours != 1 else ''}")
+        time_sections.append(f"{hours:,} hour{'s' if hours != 1 else ''}")
     if minutes > 0:
-        time_sections.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+        time_sections.append(f"{minutes:,} minute{'s' if minutes != 1 else ''}")
     if seconds >= 0:
-        time_sections.append(f"{seconds} second{'s' if seconds != 1 else ''}")
+        time_sections.append(f"{seconds:,} second{'s' if seconds != 1 else ''}")
 
     return ", ".join(time_sections)
         

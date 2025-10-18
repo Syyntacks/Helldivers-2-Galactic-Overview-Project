@@ -1,11 +1,10 @@
-import json
 from typing import Dict, Any, Union, List
 from utils.parse_conf.data_fetcher import fetch_data_from_url
 from conf import settings
 
-PLANETS_URL: str = settings.url.get("planets")
-PLANET_DETAILS_URL: str = settings.url.get("planet_stats")
-PLANET_STATUS_URL: str = settings.url.get("status")
+PLANETS_URL: str = settings.urls.get("planets")
+PLANET_DETAILS_URL: str = settings.urls.get("planet_stats")
+PLANET_STATUS_URL: str = settings.urls.get("status")
 
 class PlanetParser():
     """
@@ -30,9 +29,9 @@ class PlanetParser():
             return
         
         # Dictionary Comprehension --> for further reference
-        planets_dict = {planet['index']: planet for planet in planets_data}
-        details_dict = {detail['planetIndex']: detail for detail in details_data}
-        status_planets_dict = {status['statusIndex']: status for status in status_data}
+        planets_dict = {int(key): value for key, value in planets_data.items() if key.isdigit()}
+        details_dict = {int(key): value for key, value in details_data.items() if key.isdigit()}
+        status_planets_dict = {int(key): value for key, value in status_data.items() if key.isdigit()}
 
         # Combine data
         for index, planet_detail in planets_dict.items():
@@ -41,12 +40,12 @@ class PlanetParser():
 
             # Labelling
             self.combined_data[index] = {
-                # planets
+                # planet_detail for planet specifics!
                 'index': index,
-                'name': details.get('name', 'Unknown'),
-                'sector': details.get('sector', 'Unknown Sector'),
-                'type': details.get('type', 'Unknown Type'),
-                'biome': details.get('biome', {}).get('name', 'Unknown Biome'),
+                'name': planet_detail.get('name', 'Unknown'),
+                'sector': planet_detail.get('sector', 'Unknown Sector'),
+                'type': planet_detail.get('type', 'Unknown Type'),
+                'biome': planet_detail.get('biome', {}).get('name', 'Unknown Biome'),
                 'description': planet_detail.get('biome', {}).get('description', 'No Description'),
                 'environName': [env.get('name') for env in planet_detail.get('environmentals', [])],
                 'environDesc': [env.get('description') for env in planet_detail.get('environmentals', [])],
@@ -71,3 +70,24 @@ class PlanetParser():
                 "missionSuccessRate": "Mission Success Rate",
 
             }
+
+
+    def get_all_planets(self):
+        return self.combined_data
+
+
+    def get_planet_by_name(self, planet_name: str):
+        for planet in self.combined_data.values():
+            if planet.get('name', '').lower() == planet_name.lower():
+                return planet
+        return None
+    
+
+    def get_planet_name_by_id(self, planet_id: int) -> str:
+        if planet_id is None:
+            return "N/A"
+            
+        planet_info = self.combined_data.get(planet_id)
+        if planet_info:
+            return planet_info.get('name', 'Unknown Planet')
+        return "Unknown Planet ID"

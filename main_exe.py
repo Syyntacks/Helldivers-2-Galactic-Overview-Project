@@ -1,14 +1,12 @@
 import time
 import json
-from dotenv import load_dotenv
-load_dotenv()
 
 # File Importing
 from utils.parse_conf import data_fetcher
-from utils.parse_conf import datetime_converter
 from conf import settings
 from utils.parse_conf import major_order_parser
 from utils.parse_conf import galaxy_stats_parser
+from utils.parse_conf.planet_data_parser import PlanetParser
 
 # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 user_timezone = "America/Toronto"
@@ -29,7 +27,10 @@ def main_program():
     """
     print("\n---- Beginning new data refresh cycle ----")
     
-
+    ### PARSE ALL PLANETS ONCE
+    planet_parser = PlanetParser()
+    
+    ### MAJOR ORDER-RELATED CODE ###
     major_order_url = settings.urls.get("major_order")
     if major_order_url:
         major_orders_data = data_fetcher.fetch_data_from_url(major_order_url)
@@ -37,7 +38,7 @@ def main_program():
             # save_json_to_file(major_orders_data, "raw_mo_data") #<------- SAVES
 
             print("\nSuccessfully fetched raw data for Major Orders. Now parsing...")
-            parsed_orders = major_order_parser.parse_major_order_data(major_orders_data, user_timezone)
+            parsed_orders = major_order_parser.parse_major_order_data(major_orders_data, planet_parser, user_timezone)
             if parsed_orders is not None:
                 if not parsed_orders:
                     print("\n    There are currently no active Major Orders.")
@@ -62,8 +63,8 @@ def main_program():
                                 goal_str = f"{goal:,}"
                                 
                                 print(f"    Objective {i+1}:")
-                                print(f"        Task Type: {task.get('type')}")
-                                print(f"        Target Planet ID: {task.get('target_planet_id')}")
+                                print(f"        Task Type ID: {task.get('type')}")
+                                print(f"        Target Planet: {task.get('target_name')} (ID: {task.get('target_planet_id')})")
                                 print(f"        Progress: {progress_str} / {goal_str}")
                                 # Simple percentage calculation
                                 if goal > 0:
@@ -84,12 +85,8 @@ def main_program():
             print("\nFailed to fetch Major Order data.")
 
 
-
-
-
-
+    ### GALAXY-RELATED CODE ###
     galaxy_stats_url = settings.urls.get("planet_stats")
-
     if galaxy_stats_url:
         galaxy_stats_data = data_fetcher.fetch_data_from_url(galaxy_stats_url)
         if galaxy_stats_data:
@@ -107,7 +104,20 @@ def main_program():
         else:
             print("\nFailed to fetch Major Orders data from endpoint.")
     else:
-        print("\nMajor Orders endpoint details not found in api_endpoints.py")
+        print("\nGalaxy stats cannot be found on the API.")
+    
+
+    ### PLANET-RELATED CODE ###
+    print("\nFetching and parsing all planet data...")
+    all_planets = planet_parser.get_all_planets()
+    if all_planets:
+        print(f"\nSuccessfully parsed data for {len(all_planets)} planets.")
+
+        for i, planet in enumerate(list(all_planets.values())[:5]):
+            print(f"    {i+1}, {planet.get('name')} | Sector: {planet.get('sector')} | Biome: {planet.get('biome')}")
+        print("----------------------------")
+    else:
+        print("\nCould not fetch or parse planet data.")
 
     print("\n    ---- Data refresh cycle complete ----")
 

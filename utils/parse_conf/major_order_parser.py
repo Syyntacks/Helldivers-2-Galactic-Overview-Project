@@ -1,8 +1,9 @@
 from . import datetime_converter
+from utils.parse_conf.planet_data_parser import PlanetParser
 
 
 
-def parse_major_order_data(data, user_timezone="UTC"):
+def parse_major_order_data(data, planet_parser: PlanetParser, user_timezone="UTC"):
     
     # List to hold multiple dictionaries
     parsed_orders = []
@@ -41,16 +42,11 @@ def parse_major_order_data(data, user_timezone="UTC"):
                 value_map = dict(zip(valueTypes, values)) # Pair two value lists together
 
                 task_details["goal"] = value_map.get(3) # 3 = goal
-                task_details["target_planet_id"] = value_map.get(12) # 12 = Planet ID for MO
-                
-                if task.get("type") == 2:
-                    task_details["type"] = "Collection task"
-                elif task.get("type") == 4:
-                    task_details["type"] = f"Defend against {task_details["goal"]}"
-                elif task.get("type") == 12 or 13:
-                    task_details["type"] = "Defense task"
-                else:
-                    task_details["type"] = task.get("type")
+
+                ### IDENTIFYING PLANET ID
+                target_id = value_map.get(12) # 12 = Planet ID for MO
+                task_details["target_planet_id"] = target_id
+                task_details["target_name"] = planet_parser.get_planet_name_by_id(target_id)
                 
 
                 if i < len(tasks_list):

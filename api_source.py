@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from utils.parse_conf.planet_data_parser import PlanetParser

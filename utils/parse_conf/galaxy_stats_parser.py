@@ -69,9 +69,8 @@ def parse_galaxy_stats(data):
         missions_lost = overall_stats_dict.get("missionsLost", 0)
         missions_total = missions_won + missions_lost
         missions_won_percent = (missions_won / missions_total) * 100
-        formatted_strings.append(f"Missions Won: {missions_won:,}/{missions_total:,} ({missions_won_percent:.3f}%)")
+        formatted_strings.append(f"Missions Won: {missions_won:,} | {missions_total:,} ({missions_won_percent:.3f}%)")
 
-        user_timezone = "America/Toronto"
         mission_time = overall_stats_dict.get("missionTime")
         total_mission_time = datetime_converter.format_duration_from_seconds(mission_time)
         formatted_strings.append(f"Total Mission Time: {total_mission_time}")
