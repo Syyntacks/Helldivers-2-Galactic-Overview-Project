@@ -40,7 +40,7 @@ def get_single_planet(planet_name: str):
 @app.get("/api/major_orders")
 def get_major_orders():
     print("Request received for major orders...")
-    major_order_url = settings.url.get("major_order")
+    major_order_url = settings.urls.get("major_order")
     raw_data = fetch_data_from_url(major_order_url)
     if raw_data:
         parsed_orders = parse_major_order_data(raw_data)
@@ -51,7 +51,7 @@ def get_major_orders():
 @app.get("/api/galaxy_stats")
 def get_galaxy_stats():
     print("Request received for galaxy stats...")
-    galaxy_stats_url = settings.url.get("planet_stats")
+    galaxy_stats_url = settings.urls.get("planet_stats")
     raw_data = fetch_data_from_url(galaxy_stats_url)
     if raw_data:
         galaxy_stats = parse_galaxy_stats(raw_data)
