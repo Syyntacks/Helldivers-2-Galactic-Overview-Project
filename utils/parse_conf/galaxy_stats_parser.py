@@ -59,9 +59,9 @@ def parse_galaxy_stats(data):
             display_name = datapoint_names.get(key, key)
 
             if key in ["missionSuccessRate", "accuracy"]:
-                formatted_strings.append(f"{datapoint_names}: {value}%")
+                formatted_strings.append(f"{display_name}: {value}%")
             else:
-                formatted_strings.append(f"{datapoint_names}: {value:,}")
+                formatted_strings.append(f"{display_name}: {value:,}")
 
         formatted_strings.append("    --------------------")
 

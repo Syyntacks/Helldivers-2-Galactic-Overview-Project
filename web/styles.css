@@ -1,0 +1,20 @@
+body {
+    background-image: url("/resources/images/bg-stars.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+header {
+    color: #ffe710;
+
+}
+
+h1 {
+    color: #ffe710;
+    text-align: center;
+}
+
+p {
+    color: whitesmoke;
+    text-align: center;
+}

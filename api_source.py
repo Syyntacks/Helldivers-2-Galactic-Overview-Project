@@ -16,6 +16,11 @@ app = FastAPI()
     We define endpoints below for users to access. Subject to change.
 """
 
+@app.get("/")
+def get_root():
+    print("If you are reading this message, the Helldivers 2 API is running." \
+    "\nGo to /api/planets, /api/major_orders, or /api/galaxy_stats to access data.") 
+
 # All planet data combined
 @app.get("/api/planets") 
 def get_all_planets():
