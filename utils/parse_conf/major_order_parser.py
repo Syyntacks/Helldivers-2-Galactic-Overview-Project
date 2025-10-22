@@ -3,12 +3,10 @@ from utils.parse_conf.planet_data_parser import PlanetParser
 
 
 
-def parse_major_order_data(data, user_timezone="UTC"):
+def parse_major_order_data(data, planet_parser=PlanetParser(), user_timezone="UTC"):
     
     # List to hold multiple dictionaries
     parsed_orders = []
-
-    planet_parser = PlanetParser()
     
     if not isinstance(data, list):
         print(f"Error: Expected a list of major orders, but received {type(data)}")

@@ -52,57 +52,47 @@ class PlanetParser():
         remove_stat_keys = [
             "accuracy"
         ]
+            # Dictionary Comprehension --> for further reference
+        planets_dict = {int(key): value for key, value in planets_data.items() if key.isdigit()}
+        details_dict = {int(key): value for key, value in details_data.items() if key.isdigit()}
+        status_planets_dict = {int(key): value for key, value in status_data.items() if key.isdigit()}
 
+        formatted_strings = []
 
-    #===========================================================
-        try:
-             # Dictionary Comprehension --> for further reference
-            planets_dict = {int(key): value for key, value in planets_data.items() if key.isdigit()}
-            status_planets_dict = {int(key): value for key, value in status_data.items() if key.isdigit()}
+        # planet_stats/planets_stats
+        for key, value in planet_stats.items():
+            if key in custom_stat_keys or remove_stat_keys: 
+                continue
 
-            formatted_strings = []
+            display_name = datapoint_names.get(key, key)
 
-            # planet_stats/planets_stats
-            for key, value in planet_stats.items():
-                if key in custom_stat_keys or remove_stat_keys: 
-                    continue
-
-                display_name = datapoint_names.get(key, key)
-
-                if key in ["missionSuccessRate", "accuracy"]:
-                    formatted_strings.append(f"{display_name}: {value}%")
-                else:
-                    formatted_strings.append(f"{display_name}: {value:,}")
-
-           
-
-            
-                    
-            # Combine data
-            for index, planet_detail in planets_dict.items():
+            if key in ["missionSuccessRate", "accuracy"]:
+                formatted_strings.append(f"{display_name}: {value}%")
+            else:
+                formatted_strings.append(f"{display_name}: {value:,}")
                 
-                status = status_planets_dict.get(index, {}) # Get stats of planet
 
-                # Parameters
-                self.combined_data[index] = {
-                    # planet_detail for planet specifics!
-                    'index': index,
-                    'name': planet_detail.get('name', 'Unknown'),
-                    'sector': planet_detail.get('sector', 'Unknown Sector'),
-                    'type': planet_detail.get('type', 'Unknown Type'),
-                    'biome': planet_detail.get('biome', {}).get('name', 'Unknown Biome'),
-                    'description': planet_detail.get('biome', {}).get('description', 'No Description'),
-                    'environName': [env.get('name') for env in planet_detail.get('environmentals', [])],
-                    'environDesc': [env.get('description') for env in planet_detail.get('environmentals', [])],
-                    'weatherEffects': planet_detail.get('weather_effects'),
-                    
-                    # status
-                    'players': status.get('players', 0),
-                    'owner': status.get('owner', 'N/A'),
-                }
+        # Combine data
+        for index, planet_detail in planets_dict.items():
+            status = status_planets_dict.get(index, {}) # Get stats of planet
 
-        except TypeError or Exception as e:
-            return (f"Encountered an error: {e}")
+            # Parameters
+            self.combined_data[index] = {
+                # planet_detail for planet specifics!
+                'index': index,
+                'name': planet_detail.get('name', 'Unknown'),
+                'sector': planet_detail.get('sector', 'Unknown Sector'),
+                'type': planet_detail.get('type', 'Unknown Type'),
+                'biome': planet_detail.get('biome', {}).get('name', 'Unknown Biome'),
+                'description': planet_detail.get('biome', {}).get('description', 'No Description'),
+                'environName': [env.get('name') for env in planet_detail.get('environmentals', [])],
+                'environDesc': [env.get('description') for env in planet_detail.get('environmentals', [])],
+                'weatherEffects': planet_detail.get('weather_effects'),
+                
+                # status
+                'players': status.get('players', 0),
+                'owner': status.get('owner', 'N/A'),
+            }
 
     def get_all_planets(self):
         return self.combined_data
