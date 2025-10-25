@@ -1,19 +1,62 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-<link rel="stylesheet" href="/web/styles.css">
-<title>HD2 Galactic War Overview</title>
-<meta charset="UTF-8">
-<meta name="description" content="A website dedicated to providing an overview of the Helldivers 2 galactic war, including planets, missions, and factions.">
-<meta name="keywords" content="Helldivers 2, HD2, Galactic War, Overview">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./web/styles.css">
+    <title>HD2 Galactic War Overview</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="A website dedicated to providing an overview of the Helldivers 2 galactic war, including planets, missions, and factions.">
+    <meta name="keywords" content="Helldivers 2, HD2, Galactic War, Overview">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<header>
-    <h2>Galactic War Overview</h2>
-</header>
+
 <body>
-    <h1>Helldivers 2 Galactic Overview</h1>
-    <p>Welcome to the Helldivers 2 Galactic Overview Project!<br>Navigate below.</p>
-    <hr>
+    <header>
+    <h1>Helldivers 2 Galactic Overview</h1></header>
+    
+    
+    <div class="main-display">  <!--Defines main section-->
+        <nav class="sidebar-nav"> <!--Defines a set of links to navigate site-->
+            <h2>Site Navigation</h2>
+            <ul> <!--Creates an unordered list-->
+                <li><a href="/">Home</a></li> <!--Creates a list item-->
+                <li><a href="/api/planets" target="_self">All Planets</a></li>
+                <li><a href="/api/major_orders" target="_self">Major Order(s)</a></li>
+                <li><a href="/api/galaxy_stats" target="_self">Galaxy Stats</a></li>
+            </ul>
+        </nav>
+
+        <!--One main per document-->
+        <main class="content-area">
+            <h2>Galactic Stats Overview</h2>
+            <p>Freedom's greetings, Helldiver. Here is the current condition of the Galactic War against tyranny.</p>
+            <div class="stats-layout">
+                <div class="stat-card">
+                    <h3>Faction Kills Data</h3>
+                    <p id="stats-bug-kills">Loading...</p> 
+                    <p id="stats-bot-kills">Loading...</p> 
+                    <p id="stats-squid-kills">Loading...</p>
+                    <p id="stats-overall-kills">Loading...</p>
+                </div>
+
+                <div class="stat-card">
+                    
+                    
+                </div>
+
+                <div class="stat-card">
+                    <h3>Missions Total Data</h3>
+                    <p id="stats-total-missions-won" >Loading...</p>
+                    <p id="stats-total-missions-lost">Loading...</p>
+                    <p id="stats-missions-wl-ratio">Loading...</p>
+                </div>
+
+            </div>
+        </main>
+    </div> <footer>
+        <p>For Super Earth! | Helldivers 2 Galactic Overview Project</p>
+    </footer>
+
+    <script src="/web/main.js"></script>
+    
 </body>
 </html>

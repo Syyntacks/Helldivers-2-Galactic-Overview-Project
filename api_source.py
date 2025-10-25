@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from utils.parse_conf.planet_data_parser import PlanetParser
 from utils.parse_conf.major_order_parser import parse_major_order_data
@@ -11,6 +12,24 @@ from conf import settings
 
 # Initiation for FastAPI app
 app = FastAPI()
+
+# Defining which origins are allowed to make requests 
+# Works with the CORS FastAPI
+origins = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "*" # Allows everything for testing
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"], # All methods (GET, POST, etc.)
+    allow_headers=["*"]  # All headers
+)
 
 """
     We define endpoints below for users to access. Subject to change.
@@ -54,6 +73,6 @@ def get_galaxy_stats():
     galaxy_stats_url = settings.urls.get("planet_stats")
     raw_data = fetch_data_from_url(galaxy_stats_url)
     if raw_data:
-        galaxy_stats = parse_galaxy_stats(raw_data)
+        galaxy_stats = parse_galaxy_stats(raw_data) # returns a list
         return galaxy_stats
     return {"error": "Failed to fetch galaxy stats"}

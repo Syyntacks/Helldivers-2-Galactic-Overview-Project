@@ -110,7 +110,7 @@ def parse_galaxy_stats(data):
 
         
 
-        return formatted_strings
+        return overall_stats_dict
 
     except Exception as e:
         print(f"An error occurred while parsing galaxy stats: {e}")

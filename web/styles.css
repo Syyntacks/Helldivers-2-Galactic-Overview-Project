@@ -1,20 +1,138 @@
-body {
-    background-image: url("/resources/images/bg-stars.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+.main-display {
+    display: flex;
+    margin: 20px auto;
+    background-color: rgba(34,34,34,0.85);
+    justify-content: space-around;
+    border: #ffe710 1px solid;
+    border-radius: 8px;
+    overflow: hidden;
 }
+
+
+.sidebar-nav {
+    flex-basis: 200px;
+    flex-shrink: 0;
+    padding: 20px;
+    border-right: #ffe710 2px solid;
+}
+.sidebar-nav h2 {
+    color: #ffe710;
+    margin-top: 0;
+}
+.sidebar-nav ul {
+    list-style: none; /* Takes bullet points out */
+    padding: 0;
+}
+.sidebar-nav li {
+    color: #ffe710;
+    margin-bottom: 10px;
+}
+.sidebar-nav a {
+    color: whitesmoke;
+    text-decoration: none; /* No line for hyperlinks */
+    font-size: 1.1em;
+    display: block; /* Makes box clickable */
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+.sidebar-nav a:hover { /* Hover effect over text */
+    background-color: #ffe710;
+    color: #000;
+}
+
+
+.content-area {
+    flex-grow: 1;
+    padding: 20px;
+}
+.content-area h2 {
+    color: #ffe710;
+    margin-top: 6px;
+    text-align: center;
+}
+.content-area p {
+    color: whitesmoke;
+    padding-bottom: 6px;
+}
+
+/* HANDLES ALL STAT CARD STYLES*/
+.stats-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Creates responsive columns*/
+    gap: 20px;
+}
+.stat-card {
+    background-color: rgba(33,34,34,0.7);
+    border: #ffe710 1px solid;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+.stat-card h3 {
+    color: #ffe710;
+    font-weight: bold;
+    margin-top: 0;
+}
+.stat-card p {
+    color: whitesmoke;
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0;
+}
+/* FACTION COLOUR CLASSES*/
+.stat-card .terminid-color {
+    color: #FF9f00;
+}
+.stat-card .automaton-color {
+    color: #fe6a67;
+}
+.stat-card .illuminate-color {
+    color: #db58fb;
+}
+
+
+
+
+
+
+
+body {
+    background-image: url("../resources/images/bg-stars.jpg");
+    background-color: rgb(34, 34, 34);
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+
 
 header {
     color: #ffe710;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.7);
 
 }
 
 h1 {
     color: #ffe710;
     text-align: center;
+    margin: 0;
 }
 
 p {
-    color: whitesmoke;
+    color: #ffe710;
+    line-height: 1.8;
     text-align: center;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    color: #aaa;
+    background-color: rgba(0,0,0,0.7);
 }
