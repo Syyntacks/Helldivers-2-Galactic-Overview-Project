@@ -76,9 +76,10 @@
 }
 .stat-card p {
     color: whitesmoke;
-    font-size: 2em;
+    font-size: 1.75em;
     font-weight: bold;
     margin: 0;
+    text-align: center;
 }
 /* FACTION COLOUR CLASSES*/
 .stat-card .terminid-color {
@@ -89,6 +90,30 @@
 }
 .stat-card .illuminate-color {
     color: #db58fb;
+}
+
+.mo-card {
+    background-color: rgba(33,34,34,0.7);
+    border: #ffe710 1px solid;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+.mo-card h3 {
+    color: #ffe710;
+    font-weight: bold;
+    margin-top: 0;
+}
+.mo-card h2 {
+    color:#ffe710;
+    font-weight: bold;
+    margin-top: 0;
+}
+.mo-card p {
+    color: whitesmoke;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 0;
 }
 
 

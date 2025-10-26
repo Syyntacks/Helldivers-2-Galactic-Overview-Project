@@ -59,7 +59,7 @@ def parse_major_order_data(data, planet_parser=PlanetParser(), user_timezone="UT
             order_details["tasks"] = parsed_tasks
 
             # Reward Parsing
-            reward_data = mission_settings.get("reward")
+            reward_data = mission_settings.get(("reward", {}) if "reward" else ("rewards", {}))
             if reward_data and isinstance(reward_data, dict):
                 order_details["rewards_amount"] = reward_data.get("amount")
             else:

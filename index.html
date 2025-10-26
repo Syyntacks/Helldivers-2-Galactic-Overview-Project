@@ -2,6 +2,7 @@
 <html lang="en-US">
 <head>
     <link rel="stylesheet" href="./web/styles.css">
+    <link rel="icon" href="../resources/images/favicon.ico">
     <title>HD2 Galactic War Overview</title>
     <meta charset="UTF-8">
     <meta name="description" content="A website dedicated to providing an overview of the Helldivers 2 galactic war, including planets, missions, and factions.">
@@ -18,10 +19,11 @@
         <nav class="sidebar-nav"> <!--Defines a set of links to navigate site-->
             <h2>Site Navigation</h2>
             <ul> <!--Creates an unordered list-->
-                <li><a href="/">Home</a></li> <!--Creates a list item-->
-                <li><a href="/api/planets" target="_self">All Planets</a></li>
-                <li><a href="/api/major_orders" target="_self">Major Order(s)</a></li>
-                <li><a href="/api/galaxy_stats" target="_self">Galaxy Stats</a></li>
+                <!--Instead of directly linking to a new html page, we insert new content based on their click-->
+                <li><a href="#home">Home</a></li> <!--Creates a list item-->
+                <li><a href="#planets">All Planets</a></li>
+                <li><a href="#major_orders">Major Order(s)</a></li>
+                <li><a href="#galaxy_stats">Galaxy Stats</a></li>
             </ul>
         </nav>
 
@@ -38,8 +40,12 @@
                     <p id="stats-overall-kills">Loading...</p>
                 </div>
 
-                <div class="stat-card">
-                    
+                <div class="mo-card">
+                    <h3>Assigned Order(s)</h3>
+                    <h2 id="mo-order-title">Loading...</h2>
+                    <p id="mo-order-briefing">Loading...</p>
+                    <p id="mo-task-goal-progress">Loading...</p>
+                    <p id="mo-order-expires">Loading...</p>
                     
                 </div>
 
